@@ -315,6 +315,7 @@ static NSString *CDTokenDescription(int token)
         result = [[CDType alloc] initSimpleType:simpleType];
     } else {
         result = nil;
+        NSLog(@"Can't decode type 【%@】.", _lexer.string);
         [NSException raise:CDExceptionName_SyntaxError format:@"expected (many things), got %@", CDTokenDescription(_lookahead)];
     }
 

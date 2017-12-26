@@ -65,6 +65,12 @@
 - (NSArray *)parsedMethodTypes;
 {
     if (_hasParsedType == NO) {
+
+        if (!self.typeString.length) {
+            NSLog(@"Method【%@】 got empty type string.", self.name);
+            return nil;
+        }
+
         NSError *error = nil;
 
         CDTypeParser *parser = [[CDTypeParser alloc] initWithString:self.typeString];

@@ -55,6 +55,11 @@
 
 - (CDType *)type;
 {
+    if (!self.typeString.length) {
+        NSLog(@"Variable【%@】 got empty type string.", self.name);
+        return nil;
+    }
+    
     if (self.hasParsedType == NO && self.parseError == nil) {
         CDTypeParser *parser = [[CDTypeParser alloc] initWithString:self.typeString];
         NSError *error;
