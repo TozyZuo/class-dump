@@ -250,7 +250,13 @@ static NSString *CDTokenDescription(int token)
             NSUInteger protocolCloseIdx = [str rangeOfString:@">" options:NSBackwardsSearch].location;
             if (protocolOpenIdx != NSNotFound && protocolCloseIdx != NSNotFound) {
                 NSRange protocolRange = NSMakeRange(protocolOpenIdx, protocolCloseIdx - protocolOpenIdx);
-                NSArray *protocols = [[str substringWithRange:protocolRange] componentsSeparatedByString:@","];
+                NSString *protocolString = [str substringWithRange:protocolRange];
+                NSArray *protocols;
+                if ([protocolString containsString:@"><"]) {
+                    protocols = [protocolString componentsSeparatedByString:@"><"];
+                } else {
+                    protocols = [protocolString componentsSeparatedByString:@","];
+                }
                 
                 NSString *typeNameStr = [[str substringToIndex:(protocolOpenIdx - 1)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 CDTypeName *typeName = nil;
@@ -316,7 +322,7 @@ static NSString *CDTokenDescription(int token)
     } else {
         result = nil;
         NSLog(@"Can't decode type 【%@】.", _lexer.string);
-        [NSException raise:CDExceptionName_SyntaxError format:@"expected (many things), got %@", CDTokenDescription(_lookahead)];
+//        [NSException raise:CDExceptionName_SyntaxError format:@"expected (many things), got %@", CDTokenDescription(_lookahead)];
     }
 
     return result;
@@ -355,8 +361,13 @@ static NSString *CDTokenDescription(int token)
 
     NSMutableArray *result = [NSMutableArray array];
 
-    while (_lookahead == TK_QUOTED_STRING || [self isTokenInTypeSet:_lookahead])
-        [result addObject:[self parseMember]];
+    while (_lookahead == TK_QUOTED_STRING || [self isTokenInTypeSet:_lookahead]) {
+        // @@@
+        CDType *type = [self parseMember];
+        if (type) {
+            [result addObject:type];
+        }
+    }
 
     //NSLog(@"<  %s", __cmd);
 
@@ -488,6 +499,7 @@ static NSString *CDTokenDescription(int token)
         || token == '#'
         || token == ':'
         || token == '%'
+        || token == 'A' // @@@
         || token == '?')
         return YES;
 

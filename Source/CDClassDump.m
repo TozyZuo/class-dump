@@ -145,7 +145,16 @@ NSString *CDErrorKey_Exception    = @"CDErrorKey_Exception";
             for (CDLoadCommand *loadCommand in [machOFile loadCommands]) {
                 if ([loadCommand isKindOfClass:[CDLCDylib class]]) {
                     CDLCDylib *dylibCommand = (CDLCDylib *)loadCommand;
-                    if ([dylibCommand cmd] == LC_LOAD_DYLIB) {
+                    // @@@
+                    uint32_t cmd = [dylibCommand cmd];
+                    if (cmd == LC_LOAD_DYLIB ||
+                        cmd == LC_ID_DYLIB ||
+                        cmd == LC_PREBOUND_DYLIB ||
+                        cmd == LC_LOAD_WEAK_DYLIB ||
+                        cmd == LC_REEXPORT_DYLIB ||
+                        cmd == LC_LAZY_LOAD_DYLIB ||
+                        cmd == LC_LOAD_UPWARD_DYLIB)
+                    {
                         [self.searchPathState pushSearchPaths:[machOFile runPaths]];
                         {
                             NSString *loaderPathPrefix = @"@loader_path";

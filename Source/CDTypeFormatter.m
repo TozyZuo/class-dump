@@ -97,7 +97,8 @@ static BOOL debug = NO;
         type.variableName = name;
         [type phase0RecursivelyFixStructureNames:NO]; // Nuke the $_ names
         [type phase3MergeWithTypeController:self.typeController];
-        [resultString appendString:[type formattedString:nil formatter:self level:0]];
+        // @@@
+        [resultString appendString:[type formattedString:nil formatter:self level:0] ?: @""];
     }
 
     return resultString;
