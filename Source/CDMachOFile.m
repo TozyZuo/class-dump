@@ -73,6 +73,11 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
     BOOL _uses64BitABI;
 }
 
+- (void)dealloc
+{
+
+}
+
 - (id)init;
 {
     if ((self = [super init])) {
@@ -192,10 +197,12 @@ static NSString *CDMachOFileMagicNumberDescription(uint32_t magic)
 
 - (CDMachOFile *)machOFileWithArch:(CDArch)arch;
 {
-    if (self.cputype == arch.cputype && self.maskedCPUSubtype == (arch.cpusubtype & ~CPU_SUBTYPE_MASK))
-        return self;
-
-    return nil;
+    // @@@
+    return self;
+//    if (self.cputype == arch.cputype && self.maskedCPUSubtype == (arch.cpusubtype & ~CPU_SUBTYPE_MASK))
+//        return self;
+//
+//    return nil;
 }
 
 #pragma mark -
